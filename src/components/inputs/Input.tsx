@@ -6,7 +6,7 @@ import React from "react";
 interface InputProps extends React.ComponentProps<"input"> {
   register: UseFormRegister<FieldValues>;
   label: string;
-  errors: FieldErrors;
+  error: string;
   disabled?: boolean;
 }
 
@@ -14,7 +14,7 @@ const Input: React.FC<InputProps> = ({
   label,
   id,
   register,
-  errors,
+  error,
   autoComplete,
   disabled,
   ...rest
@@ -32,17 +32,18 @@ const Input: React.FC<InputProps> = ({
           autoComplete={id}
           className={clsx(
             `w-full
-          form-input block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300
-           placeholder:text-gray-400
-          focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6
-          `,
-            errors[id] && "focus:ring-rose-500",
+            form-input block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300
+            placeholder:text-gray-400
+            focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6
+            `,
+            error && "focus:!ring-rose-500",
             disabled && "opacity:"
           )}
           {...register(id)}
           {...rest}
         />
       </div>
+      {error && <div className="text-sm text-rose-500 mt-1">{error}</div>}
     </div>
   );
 };

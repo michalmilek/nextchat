@@ -1,11 +1,20 @@
-import SocialButton from "@/app/components/inputs/buttons/SocialButton";
+import SocialButton from "@/components/buttons/SocialButton";
 import React from "react";
+import useAuthLogic from "./useAuthLogic";
 
 const AuthSocialButtons = () => {
+  const { socialActions } = useAuthLogic();
+
   return (
     <div className="flex gap-3 w-full justify-center items-center">
-      <SocialButton provider="Google" />
-      <SocialButton provider="Facebook" />
+      <SocialButton
+        provider="Google"
+        onClick={() => socialActions("google")}
+      />
+      <SocialButton
+        onClick={() => socialActions("github")}
+        provider="Github"
+      />
     </div>
   );
 };

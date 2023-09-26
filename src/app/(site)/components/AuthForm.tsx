@@ -1,41 +1,37 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import Input from "@/app/components/inputs/Input";
-import Button from "@/app/components/inputs/buttons/Button";
-import Divider from "@/app/components/Divider";
+import Input from "@/components/inputs/Input";
+import Button from "@/components/buttons/Button";
+import Divider from "@/components/Divider";
 import AuthSocialButtons from "./AuthSocialButtons";
-import AnchorButton from "@/app/components/inputs/buttons/AnchorButton";
+import AnchorButton from "@/components/buttons/AnchorButton";
 import AuthToggle from "./AuthToggle";
+import axios from "axios";
+import { useRegister } from "@/services/auth/authServices";
+import useAuthLogic from "./useAuthLogic";
+import { signIn, useSession } from "next-auth/react";
 
-export type Variant = "LOGIN" | "REGISTER";
-
-const schema = yup.object().shape({
-  name: yup.string().required(),
-  email: yup.string().email().required(),
-  password: yup.string().min(6).required(),
-});
+import { toast } from "react-toastify";
+import { Register } from "@/services/auth/auth";
+import { useRouter } from "next/navigation";
 
 const AuthForm = () => {
-  const [variant, setVariant] = useState<Variant>("LOGIN");
-  const [isLoading, setIsLoading] = useState(false);
-
-  const toggleVariant = useCallback(() => {
-    if (variant === "LOGIN") {
-      setVariant("REGISTER");
-    } else {
-      setVariant("LOGIN");
-    }
-  }, [variant]);
+  const session = useSession();
+  const { isLoading } = useRegister();
+  const { toggleVariant, variant, schema, submitAuthForm } = useAuthLogic();
+  const router = useRouter();
 
   const {
     register,
+    getValues,
     handleSubmit,
     formState: { errors },
   } = useForm<FieldValues>({
+    //@ts-ignore
     resolver: yupResolver(schema),
     defaultValues: {
       name: "",
@@ -44,46 +40,46 @@ const AuthForm = () => {
     },
   });
 
-  const onSubmit: SubmitHandler<FieldValues> = (data: FieldValues) => {
-    setIsLoading(true);
-
-    if (variant === "LOGIN") {
-      //AXIOS REGISTER
-    } else {
-      //nextAuth
+  useEffect(() => {
+    if (session?.status === "authenticated") {
+      router.push("/users");
     }
-  };
-
-  const socialAction = (action: string) => {
-    setIsLoading(true);
-  };
+  }, [session?.status, router]);
 
   return (
     <div className="mt-8 sm:mx-auto sm_w-full sm:max-w-md">
       <div className="bg-white px-4 py-u shadow sm:rounded-lg sm:px-10">
         <form
           className="space-y-6 py-3"
-          onSubmit={handleSubmit(onSubmit)}>
+          onSubmit={handleSubmit(submitAuthForm)}>
           {variant === "REGISTER" && (
             <Input
               id="name"
               label="Name"
               register={register}
-              errors={errors}
+              error={
+                errors.name?.message ? (errors.name.message as string) : ""
+              }
             />
           )}
           <Input
             id="email"
             label="Email"
             register={register}
-            errors={errors}
+            error={
+              errors.email?.message ? (errors.email.message as string) : ""
+            }
           />
           <Input
             id="password"
             label="Password"
             type={"password"}
             register={register}
-            errors={errors}
+            error={
+              errors.password?.message
+                ? (errors.password.message as string)
+                : ""
+            }
           />
           <Button
             disabled={isLoading}

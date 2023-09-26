@@ -1,12 +1,20 @@
 import React from "react";
-import { FaFacebook, FaGoogle } from "react-icons/fa";
+import { FaFacebook, FaGoogle, FaGithub } from "react-icons/fa";
 
-interface SocialButtonProps {
-  provider: "Google" | "Facebook";
+interface SocialButtonProps extends React.ComponentProps<"button"> {
+  provider: "Google" | "Facebook" | "Github";
 }
 
 const SocialButton: React.FC<SocialButtonProps> = ({ provider, ...rest }) => {
-  const Icon = provider === "Google" ? FaGoogle : FaFacebook;
+  let Icon;
+
+  if (provider === "Google") {
+    Icon = FaGoogle;
+  } else if (provider === "Facebook") {
+    Icon = FaFacebook;
+  } else if (provider === "Github") {
+    Icon = FaGithub;
+  }
 
   return (
     <button
