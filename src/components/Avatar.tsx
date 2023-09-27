@@ -9,7 +9,7 @@ interface Props {
 
 const Avatar = ({ image, alt, online = true }: Props) => {
   return (
-    <div className="flex items-center relative w-8 h-8">
+    <div className="flex items-center relative w-8 h-8 flex-shrink-0">
       <Image
         src={image ? image : "/avatarPlaceholder.jpg"}
         alt={alt}
