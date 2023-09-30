@@ -16,7 +16,6 @@ const Sidebar = ({
   currentUser: User;
   users: User[];
 }) => {
-  console.log("🚀 ~ users:", users);
   const routes = useRoutes();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const isMediumResolution = useMediaQuery({

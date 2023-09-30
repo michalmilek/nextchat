@@ -21,7 +21,7 @@ const Header = ({ conversation }: HeaderProps) => {
   }, [conversation]);
 
   return (
-    <header className="border-b shadow">
+    <header className="border-b shadow w-full p-4">
       <div className="flex items-center justify-start gap-4">
         <Avatar
           image={otherUser.image}
