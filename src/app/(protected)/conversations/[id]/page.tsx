@@ -4,6 +4,9 @@ import getMessages from "@/services/getMessages";
 import React from "react";
 import Header from "./components/Header";
 import FooterMessage from "./components/FooterMessage";
+import Chat from "./components/Chat";
+import ChatDetails from "./components/ChatDetails";
+import ClientSiteStructure from "./components/ClientSiteStructure";
 
 interface IParams {
   id: string;
@@ -38,10 +41,11 @@ const Page = async ({ params }: { params: IParams }) => {
   }
 
   return (
-    <div className="flex h-full w-full flex-col justify-between items-start">
-      <Header conversation={conversation} />
-      <FooterMessage conversationId={params.id} />
-    </div>
+    <ClientSiteStructure
+      conversation={conversation}
+      initialMessages={messages}
+      conversationId={params.id}
+    />
   );
 };
 

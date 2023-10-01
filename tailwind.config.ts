@@ -13,6 +13,7 @@ const config: Config = {
     require("@tailwindcss/forms")({
       strategy: "class",
     }),
+    require("@headlessui/tailwindcss"),
   ],
 };
 export default config

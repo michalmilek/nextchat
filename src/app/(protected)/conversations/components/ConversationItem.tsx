@@ -76,7 +76,9 @@ const ConversationItem = ({
         />
         <div className="flex flex-col items-center justify-between">
           <p className="font-bold">{data.name || otherUser.name}</p>
-          <span>{lastMessageText}</span>
+          <span className={`${hasSeen ? "" : "font-bold"}`}>
+            {lastMessageText}
+          </span>
         </div>
       </div>
       {lastMessage?.createdAt && (
