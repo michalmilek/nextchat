@@ -6,13 +6,16 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import ConversationItem from "./ConversationItem";
-import { FaComment } from "react-icons/fa";
+import { FaComment, FaUsers } from "react-icons/fa";
+import MakeGroupChat from "./MakeGroupChat";
+import { User } from "@prisma/client";
 
 interface ConversationListProps {
   initialItems: FullConversationType[];
+  users: User[];
 }
 
-const ConversationList = ({ initialItems }: ConversationListProps) => {
+const ConversationList = ({ initialItems, users }: ConversationListProps) => {
   const [items, setItems] = useState(initialItems);
   const [selectedConversation, setSelectedConversation] = useState<
     number | null
@@ -29,9 +32,10 @@ const ConversationList = ({ initialItems }: ConversationListProps) => {
   return (
     <div className="h-full flex flex-col border-r shadow">
       <div className="flex items-center space-x-2 mb-4 w-full justify-between p-4">
-        <h2 className="text-lg font-semibold text-gray-700">Conversations</h2>
-        <FaComment className="w-6 h-6 text-gray-500" />
+        <h2 className="text-lg font-semibold text-gray-800">Conversations</h2>
+        <FaComment className="w-6 h-6 text-gray-800" />
       </div>
+      <MakeGroupChat users={users} />
       {items.map((item, index) => (
         <ConversationItem
           handleSelectedConversation={handleSelectedConversation}
