@@ -1,35 +1,25 @@
 "use client";
 
 import Avatar from "@/components/Avatar";
+import useMe from "@/hooks/useMe";
 import { FullMessageType } from "@/types";
+import { User } from "@prisma/client";
 import axios from "axios";
 import { formatDistanceToNow } from "date-fns";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import React, { useEffect } from "react";
 import { IconContext } from "react-icons";
 import { FaCheck } from "react-icons/fa";
 
-const chatMessages = [
-  {
-    id: 1,
-    text: "Hello!",
-    sender: "Alice",
-    timestamp: new Date("2023-09-01T10:00:00"),
-  },
-  {
-    id: 2,
-    text: "Hi there!",
-    sender: "Bob",
-    timestamp: new Date("2023-09-01T10:01:00"),
-  },
-];
-
 const Chat = ({
   initialMessages,
   conversationId,
+  me,
 }: {
   initialMessages: FullMessageType[];
   conversationId: string;
+  me: User;
 }) => {
   useEffect(() => {
     if (conversationId) {
@@ -42,7 +32,9 @@ const Chat = ({
       {initialMessages.map((message) => (
         <div
           key={message.id}
-          className="flex flex-col bg-white p-4 rounded-lg shadow w-full h-auto">
+          className={`flex flex-col bg-white p-4 rounded-lg shadow w-full h-auto ${
+            message.sender.name !== me?.name ? "items-end" : "items-start"
+          }`}>
           <div className="flex items-center space-x-2">
             <Avatar
               image={message.sender.image}

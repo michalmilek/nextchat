@@ -7,6 +7,7 @@ import FooterMessage from "./components/FooterMessage";
 import Chat from "./components/Chat";
 import ChatDetails from "./components/ChatDetails";
 import ClientSiteStructure from "./components/ClientSiteStructure";
+import getCurrentUser from "@/services/getCurrentUser";
 
 interface IParams {
   id: string;

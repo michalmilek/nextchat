@@ -6,6 +6,7 @@ import Avatar from "@/components/Avatar";
 import useOtherUser from "@/hooks/useOtherUser";
 import { Conversation, User } from "@prisma/client";
 import { useMemo, useState } from "react";
+import GroupAvatar from "@/components/GroupAvatar";
 
 interface HeaderProps {
   conversation: Conversation & {
@@ -23,7 +24,6 @@ const Header: React.FC<HeaderProps> = ({
   handleMenuClose,
 }) => {
   const otherUser = useOtherUser(conversation);
-
   const statusText = useMemo(() => {
     if (conversation.isGroup) return `${conversation.users.length} members`;
 
@@ -33,10 +33,14 @@ const Header: React.FC<HeaderProps> = ({
   return (
     <header className="border-b shadow w-full p-4 flex justify-between">
       <div className="flex items-center justify-start gap-4">
-        <Avatar
-          image={otherUser.image}
-          alt={conversation.name || otherUser.name || otherUser.id}
-        />
+        {conversation.isGroup ? (
+          <GroupAvatar users={conversation.users} />
+        ) : (
+          <Avatar
+            image={otherUser.image}
+            alt={conversation.name || otherUser.name || otherUser.id}
+          />
+        )}
         <div className="flex-1 flex items-start justify-center flex-col">
           <p className="font-bold text-lg">
             {conversation.name || otherUser.name}

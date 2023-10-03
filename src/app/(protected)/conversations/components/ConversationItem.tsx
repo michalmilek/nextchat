@@ -1,6 +1,7 @@
 "use client";
 
 import Avatar from "@/components/Avatar";
+import GroupAvatar from "@/components/GroupAvatar";
 import useOtherUser from "@/hooks/useOtherUser";
 import { FullConversationType } from "@/types";
 import { format } from "date-fns";
@@ -70,10 +71,14 @@ const ConversationItem = ({
         handleClick();
       }}>
       <div className="flex items-center justify-start gap-4">
-        <Avatar
-          image={otherUser.image}
-          alt={otherUser.name || otherUser.id}
-        />
+        {data.isGroup ? (
+          <GroupAvatar users={data.users} />
+        ) : (
+          <Avatar
+            image={otherUser.image}
+            alt={otherUser.name || otherUser.id}
+          />
+        )}
         <div className="flex flex-col items-center justify-between">
           <p className="font-bold">{data.name || otherUser.name}</p>
           <span className={`${hasSeen ? "" : "font-bold"}`}>

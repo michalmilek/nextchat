@@ -19,6 +19,7 @@ const FooterMessage = ({ conversationId }: { conversationId: string }) => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm({
     defaultValues: {
       message: "",
@@ -28,6 +29,7 @@ const FooterMessage = ({ conversationId }: { conversationId: string }) => {
 
   const onSubmit = (data: FieldValues) => {
     postMessage({ message: data.message, image: "", conversationId });
+    reset();
   };
 
   const handleUpload = (result: any) => {

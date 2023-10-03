@@ -21,8 +21,8 @@ const schema = yup.object().shape({
   groupName: yup.string().required("Group name is required"),
   members: yup
     .array()
-    .min(1, "At least one member is required")
-    .required("At least one member is required"),
+    .min(2, "At least two member is required")
+    .required("At least two members are required"),
 });
 
 export default function MakeGroupChat({ users }: Props): JSX.Element {
