@@ -5,10 +5,12 @@ import GroupAvatar from "@/components/GroupAvatar";
 import useOtherUser from "@/hooks/useOtherUser";
 import { Transition } from "@headlessui/react";
 import { Conversation, User } from "@prisma/client";
+import axios from "axios";
 import { format } from "date-fns";
 import Image from "next/image";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { FaTimes } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 interface SidebarProps {
   isShowing: boolean;
@@ -24,6 +26,12 @@ const ChatDetails: React.FC<SidebarProps> = ({
   conversation,
 }) => {
   const otherUser = useOtherUser(conversation);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const deleteConversation = () => {
+    axios.delete(`/api/conversations/${conversation.id}`);
+    toast.success("Conversation deleted successfully");
+  };
 
   return (
     <>
@@ -94,7 +102,9 @@ const ChatDetails: React.FC<SidebarProps> = ({
               </div>
             </div>
             <div className="mt-4 flex flex-col items-start gap-2">
-              <button className="bg-gray-800 text-white px-4 py-2 rounded-md mr-2">
+              <button
+                onClick={deleteConversation}
+                className="bg-gray-800 text-white px-4 py-2 rounded-md mr-2">
                 Delete Conversation
               </button>
               <button className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md">

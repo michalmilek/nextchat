@@ -3,7 +3,6 @@ import getCurrentUser from "./getCurrentUser";
 
 const getConversationById = async (conversationId: string) => {
   try {
-    console.log("🚀 ~ conversationId:", conversationId);
     const currentUser = await getCurrentUser();
 
     if (!currentUser?.email) {

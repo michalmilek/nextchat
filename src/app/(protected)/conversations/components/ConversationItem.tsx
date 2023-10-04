@@ -61,6 +61,14 @@ const ConversationItem = ({
 
     return "Started a conversation";
   }, [lastMessage]);
+
+  /* 
+  if (
+    data.users[0].email === "dasgld1337@gmail.com" ||
+    data.users[1].email === "dasgld1337@gmail.com"
+  ) {
+    console.log(data);
+  } */
   return (
     <button
       className={`flex items-center transition-all justify-between p-4 ${

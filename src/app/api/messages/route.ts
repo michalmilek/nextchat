@@ -13,29 +13,25 @@ export async function POST(request: Request) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const newMessage = await prisma?.message.create({
+    const newMessage = await prisma.message.create({
+      include: {
+        seen: true,
+        sender: true,
+      },
       data: {
         body: message,
         image: image,
         conversation: {
-          connect: {
-            id: conversationId,
-          },
+          connect: { id: conversationId },
         },
         sender: {
-          connect: {
-            id: currentUser.id,
-          },
+          connect: { id: currentUser.id },
         },
         seen: {
           connect: {
             id: currentUser.id,
           },
         },
-      },
-      include: {
-        seen: true,
-        sender: true,
       },
     });
 
@@ -69,7 +65,7 @@ export async function POST(request: Request) {
     updatedConversation.users.map((user) => {
       pusherServer.trigger(user.email!, "conversation:update", {
         id: conversationId,
-        message: [lastMessage],
+        messages: [lastMessage],
       });
     });
 
