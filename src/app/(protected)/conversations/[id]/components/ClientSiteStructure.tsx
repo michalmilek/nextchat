@@ -2,12 +2,17 @@
 
 import React, { useState } from "react";
 import Header from "./Header";
-import Chat from "./Chat";
+import dynamic from "next/dynamic";
 import FooterMessage from "./FooterMessage";
 import ChatDetails from "./ChatDetails";
 import { FullMessageType } from "@/types";
 import { Conversation, User } from "@prisma/client";
+import ChatSkeleton from "./ChatSkeleton";
 import useMe from "@/hooks/useMe";
+const Chat = dynamic(() => import("./Chat"), {
+  loading: () => <ChatSkeleton />,
+  ssr: false,
+});
 
 interface Props {
   initialMessages: FullMessageType[];

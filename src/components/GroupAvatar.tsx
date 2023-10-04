@@ -28,8 +28,8 @@ const GroupAvatar = ({ users }: Props) => {
                 src={user.image || "/avatarPlaceholder.jpg"}
                 alt={user.name + " group avatar" || user.id + " group avatar"}
                 fill
-                objectFit="cover"
-                className="rounded-full"
+                sizes="100%"
+                className="rounded-full object-cover"
               />
             </div>
           ))}

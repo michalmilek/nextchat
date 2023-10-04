@@ -1,16 +1,16 @@
 "use client";
 
 import Avatar from "@/components/Avatar";
-import useMe from "@/hooks/useMe";
+import DynamicImage from "@/components/DynamicImage";
+import { pusherClient } from "@/libs/pusher";
 import { FullMessageType } from "@/types";
 import { User } from "@prisma/client";
 import axios from "axios";
 import { formatDistanceToNow } from "date-fns";
-import { useSession } from "next-auth/react";
-import Image from "next/image";
-import React, { useEffect } from "react";
-import { IconContext } from "react-icons";
+import { find } from "lodash";
+import React, { useEffect, useState } from "react";
 import { FaCheck } from "react-icons/fa";
+import { animateScroll } from "react-scroll";
 
 const Chat = ({
   initialMessages,
@@ -21,15 +21,61 @@ const Chat = ({
   conversationId: string;
   me: User;
 }) => {
+  const [messages, setMessages] = useState(initialMessages);
+
+  const scrollToBottom = () => {
+    animateScroll.scrollToBottom({
+      containerId: "messages-container",
+      duration: 200,
+      smooth: "easeInOutQuart",
+    });
+  };
+
   useEffect(() => {
     if (conversationId) {
       axios.post(`/api/conversations/${conversationId}/seen`);
     }
   }, [conversationId]);
 
+  useEffect(() => {
+    pusherClient.subscribe(conversationId);
+
+    const messageHandler = (message: FullMessageType) => {
+      axios.post(`/api/conversations/${conversationId}/seen`);
+
+      setMessages((current) => {
+        if (find(current, { id: message.id })) {
+          return current;
+        }
+        return [...current, message];
+      });
+    };
+
+    pusherClient.bind("messages:new", messageHandler);
+
+    return () => {
+      pusherClient.unsubscribe(conversationId);
+      pusherClient.unbind("messages:new", messageHandler);
+    };
+  }, [conversationId]);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (messages) {
+        scrollToBottom();
+      }
+    }, 200);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [messages]);
+
   return (
-    <div className="flex flex-col space-y-2 h-full w-full justify-start">
-      {initialMessages.map((message) => (
+    <div
+      id="messages-container"
+      className="flex flex-col space-y-2 h-full w-full justify-start pb-8 overflow-y-auto">
+      {messages.map((message) => (
         <div
           key={message.id}
           className={`flex flex-col bg-white p-4 rounded-lg shadow w-full h-auto ${
@@ -40,9 +86,11 @@ const Chat = ({
               image={message.sender.image}
               alt={message.sender.name || message.sender.id}
             />
-            <div className="text-gray-500 text-sm">
-              {message.sender.name} - {formatDistanceToNow(message.createdAt)}{" "}
-              ago
+            <div
+              suppressHydrationWarning
+              className="text-gray-500 text-sm">
+              {message.sender.name} -{" "}
+              {formatDistanceToNow(new Date(message.createdAt))} ago
             </div>
             {message.seenIds.filter((id) => id !== message.senderId).length >
               0 && (
@@ -53,11 +101,8 @@ const Chat = ({
           </div>
           {message.image ? (
             <div className="max-h-[300px] max-w-[300px] mt-2 cursor-pointer relative aspect-square">
-              <Image
+              <DynamicImage
                 src={message.image}
-                objectFit="cover"
-                fill
-                className="rounded-md border-2 border-gray-800 h-full w-full max-h-[300px] max-w-[300px] relative hover:scale-105 transition-all"
                 alt=""
               />
             </div>

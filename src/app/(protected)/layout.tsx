@@ -1,6 +1,3 @@
-import AuthContext from "@/context/AuthContext";
-import QueryContext from "@/context/QueryContext";
-import ToasterContext from "@/context/ToasterContext";
 import React from "react";
 import ServerSidebar from "./components/ServerSidebar";
 

@@ -14,6 +14,7 @@ const Avatar = ({ image, alt, online = true }: Props) => {
         src={image ? image : "/avatarPlaceholder.jpg"}
         alt={alt}
         fill
+        sizes="100%"
         className="rounded-full mr-2"
       />
       {online && (
