@@ -20,12 +20,14 @@ interface Props {
   conversation: Conversation & {
     users: User[];
   };
+  users: User[];
 }
 
 const ClientSiteStructure = ({
   conversation,
   initialMessages,
   conversationId,
+  users,
 }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const me = useMe(conversation);
@@ -47,6 +49,7 @@ const ClientSiteStructure = ({
         <FooterMessage conversationId={conversationId} />
       </div>
       <ChatDetails
+        users={users}
         conversation={conversation}
         isShowing={isOpen}
         onClose={() => setIsOpen(false)}

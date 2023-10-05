@@ -8,6 +8,7 @@ import Chat from "./components/Chat";
 import ChatDetails from "./components/ChatDetails";
 import ClientSiteStructure from "./components/ClientSiteStructure";
 import getCurrentUser from "@/services/getCurrentUser";
+import getUsers from "@/services/getUsers";
 
 interface IParams {
   id: string;
@@ -28,6 +29,7 @@ const Page = async ({ params }: { params: IParams }) => {
 
   const conversation = await getConversationById(params.id);
   const messages = await getMessages(params.id);
+  const users = await getUsers();
 
   if (!conversation) {
     return (
@@ -46,6 +48,7 @@ const Page = async ({ params }: { params: IParams }) => {
       conversation={conversation}
       initialMessages={messages}
       conversationId={params.id}
+      users={users}
     />
   );
 };

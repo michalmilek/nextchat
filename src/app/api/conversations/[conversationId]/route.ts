@@ -16,8 +16,6 @@ export async function DELETE(
     const { conversationId } = params;
     const currentUser = await getCurrentUser();
 
-    console.log("kaktus");
-
     if (!currentUser?.id) {
       return NextResponse.json(null);
     }
@@ -36,7 +34,7 @@ export async function DELETE(
         users: true,
       },
     });
-    console.log("🚀 ~ conversationToDelete:", conversationToDelete);
+
 
     if (!conversationToDelete) {
       return new NextResponse("Invalid ID", { status: 400 });

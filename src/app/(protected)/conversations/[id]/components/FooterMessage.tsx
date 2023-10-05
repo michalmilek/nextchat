@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { FaEnvelope, FaImage, FaSmile } from "react-icons/fa";
 import { useForm, FieldValues } from "react-hook-form";
 import * as yup from "yup";
@@ -8,16 +8,20 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { usePostMessage } from "@/services/messages/messagesServices";
 import { CldUploadButton } from "next-cloudinary";
 import axios from "axios";
+import Picker from "emoji-picker-react";
 
 const schema = yup.object().shape({
   message: yup.string().required("Message is required"),
 });
 
 const FooterMessage = ({ conversationId }: { conversationId: string }) => {
+  const [showPicker, setShowPicker] = useState(false);
   const { mutate: postMessage } = usePostMessage();
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors },
     reset,
   } = useForm({
@@ -39,12 +43,14 @@ const FooterMessage = ({ conversationId }: { conversationId: string }) => {
     });
   };
 
+  const inputValue = watch("message");
+
   return (
     <main className="bg-neutral-200 text-center dark:bg-neutral-700 lg:text-left w-full">
       <div className="p-4 flex flex-col items-start justify-center">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex items-center w-full gap-3">
+          className="flex items-center w-full gap-3 relative">
           <input
             type="text"
             placeholder="Write a message..."
@@ -62,17 +68,23 @@ const FooterMessage = ({ conversationId }: { conversationId: string }) => {
             uploadPreset="ug4qd9yy">
             <FaImage className="text-gray-500 hover:text-gray-700 cursor-pointer" />
           </CldUploadButton>
-          <label
-            htmlFor="emoticon"
+          <button
+            type="button"
+            about="emoji picker"
+            onClick={() => setShowPicker(true)}
             className="ml-2">
             <FaSmile className="text-gray-500 hover:text-gray-700 cursor-pointer" />
-            <input
-              type="file"
-              id="emoticon"
-              className="hidden"
-              accept=".png, .jpg, .jpeg, .gif"
-            />
-          </label>
+          </button>
+          {showPicker && (
+            <div className="absolute bottom-0 right-0">
+              <Picker
+                onEmojiClick={(emoji) => {
+                  setValue("message", inputValue + emoji.emoji);
+                  setShowPicker(false);
+                }}
+              />
+            </div>
+          )}
         </form>
         {errors.message && (
           <p className="text-red-500 text-sm mt-2">{errors.message.message}</p>

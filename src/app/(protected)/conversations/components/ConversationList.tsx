@@ -71,7 +71,6 @@ const ConversationList = ({ initialItems, users }: ConversationListProps) => {
     };
 
     const removeHandler = (conversationId: string) => {
-      console.log("AAAAAAAAAA");
       setItems((current) =>
         current.filter((conversation) => conversation.id !== conversationId)
       );
