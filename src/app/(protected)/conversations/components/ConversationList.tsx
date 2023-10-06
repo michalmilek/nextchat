@@ -13,6 +13,7 @@ import { useSession } from "next-auth/react";
 import { pusherClient } from "@/libs/pusher";
 import { find } from "lodash";
 import MakeSingleChat from "./MakeSingleChat";
+import useSearchForUser from "@/hooks/useSearchForUser";
 
 interface ConversationListProps {
   initialItems: FullConversationType[];
@@ -25,6 +26,8 @@ const ConversationList = ({ initialItems, users }: ConversationListProps) => {
   const [selectedConversation, setSelectedConversation] = useState<
     number | null
   >(null);
+  const { filteredConversations, setSearchTerm, searchTerm } =
+    useSearchForUser(initialItems);
 
   const handleSelectedConversation = (index: number) => {
     setSelectedConversation(index);
@@ -89,14 +92,22 @@ const ConversationList = ({ initialItems, users }: ConversationListProps) => {
   }, [pusherKey, router]);
 
   return (
-    <div className="h-full flex flex-col border-r shadow">
+    <div className="h-full flex flex-col border-r shadow items-center">
       <div className="flex items-center space-x-2 mb-4 w-full justify-between p-4">
         <h2 className="text-lg font-semibold text-gray-800">Conversations</h2>
         <FaComment className="w-6 h-6 text-gray-800" />
       </div>
       <MakeGroupChat users={users} />
       <MakeSingleChat users={users} />
-      {items.map((item, index) => (
+      <input
+        type="text"
+        id="user-search"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="block w-[90%] p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        placeholder="Search for user(email or name)"
+      />
+      {filteredConversations.map((item, index) => (
         <ConversationItem
           handleSelectedConversation={handleSelectedConversation}
           index={index}

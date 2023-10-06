@@ -7,6 +7,8 @@ import useOtherUser from "@/hooks/useOtherUser";
 import { Conversation, User } from "@prisma/client";
 import { useMemo, useState } from "react";
 import GroupAvatar from "@/components/GroupAvatar";
+import useMe from "@/hooks/useMe";
+import useActiveList from "@/hooks/useActiveList";
 
 interface HeaderProps {
   conversation: Conversation & {
@@ -24,11 +26,14 @@ const Header: React.FC<HeaderProps> = ({
   handleMenuClose,
 }) => {
   const otherUser = useOtherUser(conversation);
+  const { members } = useActiveList();
   const statusText = useMemo(() => {
     if (conversation.isGroup) return `${conversation.users.length} members`;
 
-    return "Active";
-  }, [conversation]);
+    return members.indexOf(otherUser.email || otherUser.id) !== -1
+      ? "Active"
+      : "Offline";
+  }, [conversation, members, otherUser.email, otherUser.id]);
 
   return (
     <header className="border-b shadow w-full p-4 flex justify-between">
@@ -37,6 +42,7 @@ const Header: React.FC<HeaderProps> = ({
           <GroupAvatar users={conversation.users} />
         ) : (
           <Avatar
+            email={otherUser.email || otherUser.id}
             image={otherUser.image}
             alt={conversation.name || otherUser.name || otherUser.id}
           />

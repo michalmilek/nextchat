@@ -4,6 +4,7 @@ import Avatar from "@/components/Avatar";
 import GroupAvatar from "@/components/GroupAvatar";
 import useOtherUser from "@/hooks/useOtherUser";
 import { FullConversationType } from "@/types";
+import clsx from "clsx";
 import { format } from "date-fns";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -62,13 +63,9 @@ const ConversationItem = ({
     return "Started a conversation";
   }, [lastMessage]);
 
-  /* 
-  if (
-    data.users[0].email === "dasgld1337@gmail.com" ||
-    data.users[1].email === "dasgld1337@gmail.com"
-  ) {
-    console.log(data);
-  } */
+  const isLastMessageNewConversation =
+    lastMessageText === "Started a conversation";
+
   return (
     <button
       className={`flex items-center transition-all justify-between p-4 ${
@@ -83,22 +80,29 @@ const ConversationItem = ({
           <GroupAvatar users={data.users} />
         ) : (
           <Avatar
+            email={otherUser?.email!}
             image={otherUser.image}
             alt={otherUser.name || otherUser.id}
           />
         )}
-        <div className="flex flex-col items-center justify-between">
-          <p className="font-bold">{data.name || otherUser.name}</p>
-          <span className={`${hasSeen ? "" : "font-bold"}`}>
-            {lastMessageText}
-          </span>
+        <div className="w-full flex items-center justify-between h-full">
+          <div className="flex flex-col items-center justify-between">
+            <p className="font-bold text-sm">{data.name || otherUser.name}</p>
+            <span
+              className={`${clsx(
+                hasSeen && "font-bold",
+                isLastMessageNewConversation && "font-normal"
+              )} text-xs`}>
+              {lastMessageText}
+            </span>
+          </div>
         </div>
+        {lastMessage?.createdAt && (
+          <p className="text-xs text-gray-500 justify-self-end">
+            {format(new Date(lastMessage.createdAt), "p")}
+          </p>
+        )}
       </div>
-      {lastMessage?.createdAt && (
-        <p className="text-sm text-gray-500">
-          {format(new Date(lastMessage.createdAt), "p")}
-        </p>
-      )}
     </button>
   );
 };

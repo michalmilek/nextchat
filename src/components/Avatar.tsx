@@ -1,13 +1,17 @@
 import React from "react";
 import Image from "next/image";
+import useActiveList from "@/hooks/useActiveList";
 
 interface Props {
   image: string | null;
   alt: string;
-  online?: boolean;
+  email: string;
 }
 
-const Avatar = ({ image, alt, online = true }: Props) => {
+const Avatar = ({ image, alt, email }: Props) => {
+  const { members } = useActiveList();
+  const online = members.indexOf(email) !== -1;
+
   return (
     <div className="flex items-center relative w-8 h-8 flex-shrink-0">
       <Image

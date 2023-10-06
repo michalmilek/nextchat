@@ -8,6 +8,7 @@ import { Controller, FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { postConversation } from "@/services/conversations/conversations";
+import { usePostConversation } from "@/services/conversations/conversationServices";
 
 type SelectOption = {
   value: string;
@@ -26,6 +27,7 @@ const schema = yup.object().shape({
 });
 
 export default function MakeSingleChat({ users }: Props): JSX.Element {
+  const { mutate } = usePostConversation();
   const [isOpen, setIsOpen] = useState(false);
 
   const userList = useMemo(() => {
@@ -43,15 +45,9 @@ export default function MakeSingleChat({ users }: Props): JSX.Element {
     },
   });
 
-  const handleConfirm = async (data: { userToChat: SelectOption }) => {
-    try {
-      if (data.userToChat && data.userToChat.value && data.userToChat) {
-        postConversation(data.userToChat.value);
-      }
-      setIsOpen(false);
-    } catch (error) {
-      console.error(error);
-    }
+  const handleConfirm = (data: { userToChat: SelectOption }) => {
+    mutate(data.userToChat.value);
+    setIsOpen(false);
   };
   return (
     <>

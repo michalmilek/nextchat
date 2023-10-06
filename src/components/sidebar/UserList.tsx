@@ -20,6 +20,7 @@ const UserList = ({ users }: { users: User[] }) => {
               className="flex gap-2 items-center flex-wrap w-full h-full"
               onClick={() => mutate(user.id)}>
               <Avatar
+                email={user.email || user.id}
                 image={user.image}
                 alt={user.name || user.id}
               />

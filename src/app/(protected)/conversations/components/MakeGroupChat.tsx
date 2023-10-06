@@ -7,6 +7,7 @@ import * as yup from "yup";
 import { Controller, FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
+import { usePostConversationGroup } from "@/services/conversations/conversationServices";
 
 type SelectOption = {
   value: string;
@@ -27,6 +28,7 @@ const schema = yup.object().shape({
 
 export default function MakeGroupChat({ users }: Props): JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
+  const { mutate } = usePostConversationGroup();
 
   const userList = useMemo(() => {
     return users.map(({ id, name }) => ({ value: id, label: name }));
@@ -44,20 +46,11 @@ export default function MakeGroupChat({ users }: Props): JSX.Element {
     },
   });
 
-  const handleConfirm = async (data: {
+  const handleConfirm = (data: {
     groupName: string;
     members: SelectOption[];
   }) => {
-    try {
-      const response = await axios.post("/api/conversations", {
-        isGroup: true,
-        name: data.groupName,
-        members: data.members,
-      });
-      setIsOpen(false);
-    } catch (error) {
-      console.error(error);
-    }
+    mutate({ members: data.members, name: data.groupName });
   };
   return (
     <>
