@@ -40,3 +40,50 @@ export const postConversationGroup = async ({
     throw error;
   }
 };
+
+
+  
+export const deleteConversation = async (conversationId: string) => {
+  try {
+    const response = await axios.delete(`/api/conversations/${conversationId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteUserFromConversation = async ({
+  userId,
+  conversationId,
+}: {
+  userId: string;
+  conversationId: string;
+}) => {
+  try {
+    const response = await axios.delete(
+      `/api/conversations/deleteUser?userId=${userId}&conversationId=${conversationId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const addUserToConversation = async ({
+  userId,
+  conversationId,
+}: {
+  userId: string;
+  conversationId: string;
+}) => {
+  try {
+    const response = await axios.patch(
+      `/api/conversations/addUser?userId=${userId}&conversationId=${conversationId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error adding user to conversation:", error);
+    throw error;
+  }
+};

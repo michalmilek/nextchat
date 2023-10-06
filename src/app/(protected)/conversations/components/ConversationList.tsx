@@ -92,7 +92,7 @@ const ConversationList = ({ initialItems, users }: ConversationListProps) => {
   }, [pusherKey, router]);
 
   return (
-    <div className="h-full flex flex-col border-r shadow items-center">
+    <div className="h-full flex flex-col border-r shadow items-center w-[400px]">
       <div className="flex items-center space-x-2 mb-4 w-full justify-between p-4">
         <h2 className="text-lg font-semibold text-gray-800">Conversations</h2>
         <FaComment className="w-6 h-6 text-gray-800" />

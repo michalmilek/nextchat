@@ -17,6 +17,11 @@ import { Fragment, useEffect, useMemo, useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { toast } from "react-toastify";
 import AddUserToChat from "./AddUserToChatModal";
+import {
+  useAddUserToConversation,
+  useDeleteConversation,
+  useDeleteUserFromConversation,
+} from "@/services/conversations/conversationServices";
 
 interface SidebarProps {
   isShowing: boolean;
@@ -40,27 +45,22 @@ const ChatDetails: React.FC<SidebarProps> = ({
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddUserOpen, setIsAddUserOpen] = useState(false);
+  const { mutate: deleteConversationFn } = useDeleteConversation();
+  const { mutate: deleteUserFromConversationFn } =
+    useDeleteUserFromConversation();
+  const { mutate: addUserToConversationFn } = useAddUserToConversation();
 
   const deleteConversation = () => {
-    axios.delete(`/api/conversations/${conversation.id}`);
-    toast.success("Conversation deleted successfully");
+    deleteConversationFn(conversation.id);
     setIsModalOpen(false);
-
-    router.refresh();
   };
 
   const deleteUserFromConversation = (userId: string) => {
-    axios.delete(
-      `/api/conversations/deleteUser?userId=${userId}&conversationId=${conversation.id}`
-    );
-    toast.success("User deleted successfully");
+    deleteUserFromConversationFn({ userId, conversationId: conversation.id });
   };
 
   const addUserToConversation = (userId: string) => {
-    axios.patch(
-      `/api/conversations/addUser?userId=${userId}&conversationId=${conversation.id}`
-    );
-    toast.success("User added successfully");
+    addUserToConversationFn({ userId, conversationId: conversation.id });
     setIsAddUserOpen(false);
   };
 
@@ -131,6 +131,7 @@ const ChatDetails: React.FC<SidebarProps> = ({
                 <GroupAvatar users={conversation.users} />
               ) : (
                 <Avatar
+                  email={otherUser.email!}
                   image={otherUser.image}
                   alt={otherUser.name || otherUser.id}
                 />

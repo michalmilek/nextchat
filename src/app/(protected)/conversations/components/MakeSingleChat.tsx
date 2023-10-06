@@ -49,6 +49,7 @@ export default function MakeSingleChat({ users }: Props): JSX.Element {
     mutate(data.userToChat.value);
     setIsOpen(false);
   };
+
   return (
     <>
       <button

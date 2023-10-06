@@ -68,14 +68,14 @@ const ConversationItem = ({
 
   return (
     <button
-      className={`flex items-center transition-all justify-between p-4 ${
+      className={`flex w-full items-center transition-all justify-between p-4 ${
         selected ? "bg-gray-200" : "hover:bg-gray-100"
       }`}
       onClick={() => {
         handleSelectedConversation(index);
         handleClick();
       }}>
-      <div className="flex items-center justify-start gap-4">
+      <div className="flex items-center justify-start gap-4 w-full">
         {data.isGroup ? (
           <GroupAvatar users={data.users} />
         ) : (
@@ -85,20 +85,20 @@ const ConversationItem = ({
             alt={otherUser.name || otherUser.id}
           />
         )}
-        <div className="w-full flex items-center justify-between h-full">
+        <div className="w-full flex items-center justify-center h-full">
           <div className="flex flex-col items-center justify-between">
             <p className="font-bold text-sm">{data.name || otherUser.name}</p>
             <span
               className={`${clsx(
                 hasSeen && "font-bold",
                 isLastMessageNewConversation && "font-normal"
-              )} text-xs`}>
+              )} text-xs truncate`}>
               {lastMessageText}
             </span>
           </div>
         </div>
         {lastMessage?.createdAt && (
-          <p className="text-xs text-gray-500 justify-self-end">
+          <p className="text-[9px] text-gray-500 justify-self-end">
             {format(new Date(lastMessage.createdAt), "p")}
           </p>
         )}

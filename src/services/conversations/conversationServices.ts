@@ -1,5 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
-import { postConversation, postConversationGroup } from "./conversations";
+import {
+  addUserToConversation,
+  deleteConversation,
+  deleteUserFromConversation,
+  postConversation,
+  postConversationGroup,
+} from "./conversations";
 import { useRouter } from "next/navigation";
 import { FullConversationType } from "@/types";
 import { toast } from "react-toastify";
@@ -29,4 +35,48 @@ export const usePostConversationGroup = () => {
   });
 
   return postConversationGroupMutation;
+};
+
+export const useDeleteConversation = () => {
+  const router = useRouter();
+  const deleteConversationMutation = useMutation(deleteConversation, {
+    onSuccess: () => {
+      router.push("/conversations");
+      toast.success("Conversation deleted successfully");
+    },
+    onError: () => {
+      toast.error("ERROR");
+    },
+  });
+
+  return deleteConversationMutation;
+};
+
+export const useDeleteUserFromConversation = () => {
+  const deleteUserFromConversationMutation = useMutation(
+    deleteUserFromConversation,
+    {
+      onSuccess: () => {
+        toast.success("User deleted successfully from conversation");
+      },
+      onError: () => {
+        toast.error("ERROR");
+      },
+    }
+  );
+
+  return deleteUserFromConversationMutation;
+};
+
+export const useAddUserToConversation = () => {
+  const addUserToConversationMutation = useMutation(addUserToConversation, {
+    onSuccess: () => {
+      toast.success("User added successfully to conversation");
+    },
+    onError: () => {
+      toast.error("ERROR");
+    },
+  });
+
+  return addUserToConversationMutation;
 };
