@@ -12,7 +12,7 @@ import React, { useCallback, useMemo } from "react";
 
 interface ConversationItemProps {
   index: number;
-  handleSelectedConversation: (index: number) => void;
+  handleSelectedConversation: (conversation: FullConversationType) => void;
   data: FullConversationType;
   selected?: boolean;
 }
@@ -72,7 +72,7 @@ const ConversationItem = ({
         selected ? "bg-gray-200" : "hover:bg-gray-100"
       }`}
       onClick={() => {
-        handleSelectedConversation(index);
+        handleSelectedConversation(data);
         handleClick();
       }}>
       <div className="flex items-center justify-start gap-4 w-full">
@@ -90,7 +90,7 @@ const ConversationItem = ({
             <p className="font-bold text-sm">{data.name || otherUser.name}</p>
             <span
               className={`${clsx(
-                hasSeen && "font-bold",
+                !hasSeen && "font-bold",
                 isLastMessageNewConversation && "font-normal"
               )} text-xs truncate`}>
               {lastMessageText}

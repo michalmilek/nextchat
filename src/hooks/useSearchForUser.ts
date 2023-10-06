@@ -10,7 +10,7 @@ const useSearchForUser = (conversations: FullConversationType[]) => {
 
   useEffect(() => {
     const filtered = conversations.filter((conversation) => {
-      const matchingUsers = conversation.users.filter((user) => {
+      const matchingUsers = conversation.users?.filter((user) => {
         const { name, email } = user;
         return (
           (name &&
@@ -19,6 +19,10 @@ const useSearchForUser = (conversations: FullConversationType[]) => {
             email.toLowerCase().includes(debouncedSearchTerm.toLowerCase()))
         );
       });
+      if (!matchingUsers) {
+        return [];
+      }
+
       return matchingUsers.length > 0;
     });
     setFilteredConversations(filtered);

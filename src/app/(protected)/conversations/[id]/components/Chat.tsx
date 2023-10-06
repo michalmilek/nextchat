@@ -98,6 +98,7 @@ const Chat = ({
           }`}>
           <div className="flex items-center space-x-2">
             <Avatar
+              email={message.sender.email!}
               image={message.sender.image}
               alt={message.sender.name || message.sender.id}
             />

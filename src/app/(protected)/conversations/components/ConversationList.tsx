@@ -14,6 +14,7 @@ import { pusherClient } from "@/libs/pusher";
 import { find } from "lodash";
 import MakeSingleChat from "./MakeSingleChat";
 import useSearchForUser from "@/hooks/useSearchForUser";
+import { moveElementToStart } from "@/utils/helpers";
 
 interface ConversationListProps {
   initialItems: FullConversationType[];
@@ -23,19 +24,16 @@ interface ConversationListProps {
 const ConversationList = ({ initialItems, users }: ConversationListProps) => {
   const session = useSession();
   const [items, setItems] = useState(initialItems);
-  const [selectedConversation, setSelectedConversation] = useState<
-    number | null
-  >(null);
+  const [selectedConversation, setSelectedConversation] =
+    useState<FullConversationType | null>(null);
   const { filteredConversations, setSearchTerm, searchTerm } =
-    useSearchForUser(initialItems);
+    useSearchForUser(items);
 
-  const handleSelectedConversation = (index: number) => {
-    setSelectedConversation(index);
+  const handleSelectedConversation = (conversation: FullConversationType) => {
+    setSelectedConversation(conversation);
   };
 
   const router = useRouter();
-
-  const { conversationId, isOpen } = useConversation();
 
   const pusherKey = useMemo(() => {
     return session.data?.user?.email;
@@ -49,18 +47,23 @@ const ConversationList = ({ initialItems, users }: ConversationListProps) => {
     pusherClient.subscribe(pusherKey);
 
     const updateHandler = (conversation: FullConversationType) => {
-      setItems((current) =>
-        current.map((currentConversation) => {
-          if (currentConversation.id === conversation.id) {
-            return {
-              ...currentConversation,
-              messages: conversation.messages,
-            };
-          }
+      const newArray = items.map((currentConversation) => {
+        if (currentConversation.id === conversation.id) {
+          return {
+            ...currentConversation,
+            messages: conversation.messages,
+          };
+        }
 
-          return currentConversation;
-        })
+        return currentConversation;
+      });
+
+      const indexToMove = newArray.findIndex(
+        (conversationEl) => conversationEl.id === conversation.id
       );
+      const readyArray = moveElementToStart(newArray, indexToMove);
+
+      setItems(readyArray as FullConversationType[]);
     };
 
     const newHandler = (conversation: FullConversationType) => {
@@ -79,17 +82,30 @@ const ConversationList = ({ initialItems, users }: ConversationListProps) => {
       );
     };
 
+    const updateUserHandler = (updatedConversation: FullConversationType) => {
+      setItems((previousConversations) => {
+        const arrayWithoutUpdatedConversation = previousConversations.filter(
+          (conversation) => conversation.id !== updatedConversation.id
+        );
+        return [updatedConversation, ...arrayWithoutUpdatedConversation];
+      });
+    };
+
     pusherClient.bind("conversation:update", updateHandler);
     pusherClient.bind("conversation:new", newHandler);
     pusherClient.bind("conversation:remove", removeHandler);
+    pusherClient.bind("conversation:addUser", updateUserHandler);
+    pusherClient.bind("conversation:deleteUser", updateUserHandler);
 
     return () => {
       pusherClient.unbind("conversation:update", updateHandler);
       pusherClient.unbind("conversation:new", newHandler);
       pusherClient.unbind("conversation:remove", removeHandler);
+      pusherClient.unbind("conversation:addUser", updateUserHandler);
+      pusherClient.unbind("conversation:deleteUser", updateUserHandler);
       pusherClient.unsubscribe(pusherKey);
     };
-  }, [pusherKey, router]);
+  }, [pusherKey, router, items]);
 
   return (
     <div className="h-full flex flex-col border-r shadow items-center w-[400px]">
@@ -112,8 +128,8 @@ const ConversationList = ({ initialItems, users }: ConversationListProps) => {
           handleSelectedConversation={handleSelectedConversation}
           index={index}
           data={item}
-          selected={index === selectedConversation}
-          key={item.id + index}
+          selected={item.id === selectedConversation?.id}
+          key={item.id + item.name + index}
         />
       ))}
     </div>
