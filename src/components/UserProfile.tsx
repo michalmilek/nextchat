@@ -12,6 +12,7 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
+import { HiXMark } from "react-icons/hi2";
 
 const schema = yup.object().shape({
   name: yup.string().required("Name is required"),
@@ -60,6 +61,7 @@ const UserProfile = ({ currentUser }: { currentUser: User }) => {
         className="p-4 shadow-md items-center flex flex-col text-gray-200 hover:bg-gray-700"
         onClick={toggleModal}>
         <Avatar
+          email={currentUser.email!}
           image={currentUser.image}
           alt={currentUser.name || currentUser.id}
         />
@@ -69,7 +71,7 @@ const UserProfile = ({ currentUser }: { currentUser: User }) => {
       <Dialog
         open={isModalOpen}
         onClose={toggleModal}
-        className="fixed z-10 inset-0 overflow-y-auto">
+        className="fixed z-[60] inset-0 overflow-y-auto">
         <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
         <div className="flex items-center justify-center min-h-screen">
           <Dialog.Panel className="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
@@ -79,16 +81,16 @@ const UserProfile = ({ currentUser }: { currentUser: User }) => {
                   User Profile
                 </h3>
                 <button
-                  className="text-gray-400 hover:text-gray-500 focus:outline-none focus:text-gray-500 transition ease-in-out duration-150"
+                  className="text-gray-400 hover:text-gray-800 focus:outline-none focus:text-gray-500 transition ease-in-out duration-150"
                   onClick={toggleModal}>
-                  <span className="sr-only">Close</span>
-                  <HiUserCircle className="h-6 w-6" />
+                  <HiXMark className="h-6 w-6" />
                 </button>
               </div>
             </Dialog.Title>
             <Dialog.Description className="px-4 py-5 sm:p-6">
               <div className="w-full flex items-center justify-center flex-col">
                 <Avatar
+                  email={currentUser.email!}
                   image={profilePicture || currentUser.image}
                   alt={currentUser.name || currentUser.id}
                 />

@@ -15,6 +15,7 @@ import { find } from "lodash";
 import MakeSingleChat from "./MakeSingleChat";
 import useSearchForUser from "@/hooks/useSearchForUser";
 import { moveElementToStart } from "@/utils/helpers";
+import { usePathname } from "next/navigation";
 
 interface ConversationListProps {
   initialItems: FullConversationType[];
@@ -32,6 +33,19 @@ const ConversationList = ({ initialItems, users }: ConversationListProps) => {
   const handleSelectedConversation = (conversation: FullConversationType) => {
     setSelectedConversation(conversation);
   };
+
+  const pathname = usePathname();
+
+  const isConversation = useMemo(() => {
+    if (pathname) {
+      const cutPathname = pathname.split("/").pop();
+      if (cutPathname === "conversations") return "";
+
+      return cutPathname;
+    }
+
+    return "";
+  }, [pathname]);
 
   const router = useRouter();
 
@@ -108,7 +122,10 @@ const ConversationList = ({ initialItems, users }: ConversationListProps) => {
   }, [pusherKey, router, items]);
 
   return (
-    <div className="h-full flex flex-col border-r shadow items-center w-[400px]">
+    <div
+      className={`flex flex-col border-r shadow items-center ${
+        isConversation ? "hidden" : "w-full"
+      } md:w-[400px] h-screen pt-10 md:pt-0`}>
       <div className="flex items-center space-x-2 mb-4 w-full justify-between p-4">
         <h2 className="text-lg font-semibold text-gray-800">Conversations</h2>
         <FaComment className="w-6 h-6 text-gray-800" />
@@ -123,15 +140,18 @@ const ConversationList = ({ initialItems, users }: ConversationListProps) => {
         className="block w-[90%] p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         placeholder="Search for user(email or name)"
       />
-      {filteredConversations.map((item, index) => (
-        <ConversationItem
-          handleSelectedConversation={handleSelectedConversation}
-          index={index}
-          data={item}
-          selected={item.id === selectedConversation?.id}
-          key={item.id + item.name + index}
-        />
-      ))}
+      <ul className="w-full h-full overflow-y-auto mt-2">
+        {filteredConversations.map((item, index) => (
+          <li key={item.id + item.name + index}>
+            <ConversationItem
+              handleSelectedConversation={handleSelectedConversation}
+              index={index}
+              data={item}
+              selected={item.id === selectedConversation?.id}
+            />
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

@@ -10,6 +10,8 @@ import { User } from "@prisma/client";
 import UserList from "./UserList";
 import UserProfile from "../UserProfile";
 import { useQuery } from "@tanstack/react-query";
+import clsx from "clsx";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Sidebar = ({
   currentUser,
@@ -35,41 +37,63 @@ const Sidebar = ({
   }, [isMediumResolution]);
 
   return (
-    <nav className="flex flex-col h-screen bg-gray-800 justify-between">
-      <aside className={`flex flex-col h-screen bg-gray-800 text-white`}>
-        <button
-          className="p-4 text-white fixed top-0 left-0 bg-gray-800 md:hidden"
-          onClick={toggleSidebar}
-          aria-label="Toggle Sidebar">
-          {isSidebarOpen ? <HiX /> : <HiMenu />}
-        </button>
-        <div className={`${isSidebarOpen ? "" : "hidden"} pt-4 flex-grow`}>
-          <div className="p-4">
-            <h1 className="text-2xl font-bold hidden md:block">Next Chat</h1>
-          </div>
-          <nav>
-            <div className="sm:hidden"></div>
-            <ul
-              className={`space-y-2 ${
-                isSidebarOpen ? "block" : "hidden sm:block"
-              }`}>
-              {routes.map((route, index) => (
-                <SidebarLink
-                  href={route.href}
-                  icon={route.icon}
-                  label={route.label}
-                  active={route.active}
-                  onClick={route.onClick}
-                  key={route.label + index}
-                />
-              ))}
-            </ul>
-          </nav>
-          <UserList users={users} />
-        </div>
-      </aside>
-      <UserProfile currentUser={currentUser} />
-    </nav>
+    <AnimatePresence>
+      <motion.nav
+        initial={{ height: 0, width: 0 }}
+        animate={{
+          height: isSidebarOpen ? "100%" : 0,
+          width: isSidebarOpen ? "200px" : 0,
+        }}
+        transition={{ duration: 0.3 }}
+        className={`flex flex-col z-50 shadow-xl  w-[100px] h-screen bg-gray-800 justify-between ${clsx(
+          !isMediumResolution && "fixed h-screen"
+        )}`}>
+        <aside className={`flex flex-col h-screen bg-gray-800 text-white`}>
+          <button
+            className="p-4 text-white fixed top-0 left-0 bg-gray-800 md:hidden"
+            onClick={toggleSidebar}
+            aria-label="Toggle Sidebar">
+            {isSidebarOpen ? <HiX /> : <HiMenu />}
+          </button>
+          {isSidebarOpen && (
+            <div className={` pt-4 flex-grow `}>
+              <div className="p-4">
+                <h1 className="text-2xl font-bold hidden md:block">
+                  Next Chat
+                </h1>
+              </div>
+              <nav>
+                <div className="sm:hidden"></div>
+                <ul
+                  className={`space-y-2 ${
+                    isSidebarOpen ? "block" : "hidden sm:block"
+                  }`}>
+                  {routes.map((route, index) => (
+                    <SidebarLink
+                      href={route.href}
+                      icon={route.icon}
+                      label={route.label}
+                      active={route.active}
+                      onClick={route.onClick}
+                      key={route.label + index}
+                    />
+                  ))}
+                </ul>
+              </nav>
+              <UserList users={users} />
+            </div>
+          )}
+        </aside>
+        {isSidebarOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}>
+            <UserProfile currentUser={currentUser} />
+          </motion.div>
+        )}
+      </motion.nav>
+    </AnimatePresence>
   );
 };
 

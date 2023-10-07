@@ -25,7 +25,7 @@ const SidebarLink: React.FC<SidebarLinkProps> = ({
         className="flex items-center"
         href={href}>
         <Icon />
-        <span className="ml-2 hidden md:block">{label}</span>
+        <span className="ml-2">{label}</span>
       </Link>
     </li>
   );

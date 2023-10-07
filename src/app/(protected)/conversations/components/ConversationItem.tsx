@@ -75,7 +75,7 @@ const ConversationItem = ({
         handleSelectedConversation(data);
         handleClick();
       }}>
-      <div className="flex items-center justify-start gap-4 w-full">
+      <div className="flex items-center justify-start gap-4 w-full ">
         {data.isGroup ? (
           <GroupAvatar users={data.users} />
         ) : (
