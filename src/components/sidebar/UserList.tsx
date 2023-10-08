@@ -20,7 +20,7 @@ const UserList = ({ users }: { users: User[] }) => {
       <header className="p-4 text-white">List of users</header>
       <ul
         className={`flex flex-col justify-center items-start ${clsx(
-          maxHeight600 && "h-[200px] overflow-y-auto"
+          maxHeight600 && "h-[200px] overflow-y-auto pt-10 xl:py-0 xl:pt-0 z-10"
         )}`}>
         {users.map((user) => (
           <li

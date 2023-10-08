@@ -50,7 +50,14 @@ export default function MakeGroupChat({ users }: Props): JSX.Element {
     groupName: string;
     members: SelectOption[];
   }) => {
-    mutate({ members: data.members, name: data.groupName });
+    mutate(
+      { members: data.members, name: data.groupName },
+      {
+        onSuccess: () => {
+          setIsOpen(false);
+        },
+      }
+    );
   };
   return (
     <>

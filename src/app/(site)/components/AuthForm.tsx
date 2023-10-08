@@ -19,6 +19,7 @@ import { toast } from "react-toastify";
 import { Register } from "@/services/auth/auth";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/Loader";
+import InfoModal from "./InfoModal";
 
 const AuthForm = () => {
   const { data: session, status } = useSession();
@@ -52,6 +53,7 @@ const AuthForm = () => {
     <>
       <div className="mt-8 sm:mx-auto sm_w-full sm:max-w-md px-2">
         <div className="bg-gray-400 px-4 py-u sm:rounded-lg sm:px-10 rounded-md shadow-xl">
+          <InfoModal />
           <form
             className="space-y-6 py-3"
             onSubmit={handleSubmit(submitAuthForm)}>

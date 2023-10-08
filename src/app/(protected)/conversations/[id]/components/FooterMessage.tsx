@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { FaEnvelope, FaImage, FaSmile } from "react-icons/fa";
 import { useForm, FieldValues } from "react-hook-form";
 import * as yup from "yup";
@@ -9,6 +9,7 @@ import { usePostMessage } from "@/services/messages/messagesServices";
 import { CldUploadButton } from "next-cloudinary";
 import axios from "axios";
 import Picker from "emoji-picker-react";
+import useClickOutside from "@/hooks/useClickOutside";
 
 const schema = yup.object().shape({
   message: yup.string().required("Message is required"),
@@ -16,6 +17,7 @@ const schema = yup.object().shape({
 
 const FooterMessage = ({ conversationId }: { conversationId: string }) => {
   const [showPicker, setShowPicker] = useState(false);
+  const emojiRef = useRef<HTMLDivElement>(null);
   const { mutate: postMessage } = usePostMessage();
   const {
     register,
@@ -45,8 +47,12 @@ const FooterMessage = ({ conversationId }: { conversationId: string }) => {
 
   const inputValue = watch("message");
 
+  useClickOutside(emojiRef, () => {
+    setShowPicker(false);
+  });
+
   return (
-    <main className="bg-neutral-200 text-center dark:bg-neutral-700 lg:text-left w-full">
+    <footer className="bg-neutral-200 text-center dark:bg-neutral-700 lg:text-left w-full flex-wrap">
       <div className="p-4 flex flex-col items-start justify-center">
         <form
           onSubmit={handleSubmit(onSubmit)}
@@ -54,7 +60,7 @@ const FooterMessage = ({ conversationId }: { conversationId: string }) => {
           <input
             type="text"
             placeholder="Write a message..."
-            className="border border-gray-300 rounded-md p-2 w-full min-w-[250px]"
+            className="border border-gray-300 rounded-md p-2 w-full md:min-w-[250px]"
             {...register("message")}
           />
           <button
@@ -76,7 +82,9 @@ const FooterMessage = ({ conversationId }: { conversationId: string }) => {
             <FaSmile className="text-gray-500 hover:text-gray-700 cursor-pointer" />
           </button>
           {showPicker && (
-            <div className="absolute bottom-0 right-0">
+            <div
+              ref={emojiRef}
+              className="absolute bottom-0 right-0">
               <Picker
                 onEmojiClick={(emoji) => {
                   setValue("message", inputValue + emoji.emoji);
@@ -90,7 +98,7 @@ const FooterMessage = ({ conversationId }: { conversationId: string }) => {
           <p className="text-red-500 text-sm mt-2">{errors.message.message}</p>
         )}
       </div>
-    </main>
+    </footer>
   );
 };
 

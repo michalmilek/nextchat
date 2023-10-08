@@ -38,13 +38,13 @@ const Header: React.FC<HeaderProps> = ({
   }, [conversation, members, otherUser.email, otherUser.id]);
 
   return (
-    <header className="border-b shadow w-full p-4 flex justify-between pl-20 md:pl-4">
+    <header className="border-b shadow w-full p-4 flex justify-between pl-16 xl:pl-4">
       <div className="flex items-center justify-start gap-4">
         <button
           onClick={() => {
             router.back();
           }}
-          className="flex items-center space-x-2 bg-gray-800 hover:bg-gray-600 transition-all text-white font-bold py-2 px-4 rounded md:hidden">
+          className="flex items-center space-x-2 bg-gray-800 hover:bg-gray-600 transition-all text-white font-bold py-2 px-4 rounded xl:hidden">
           <FaArrowLeft />
         </button>
         {conversation.isGroup ? (
@@ -57,7 +57,7 @@ const Header: React.FC<HeaderProps> = ({
           />
         )}
         <div className="flex-1 flex items-start justify-center flex-col">
-          <p className="font-bold text-lg">
+          <p className="font-bold break-before-auto">
             {conversation.name || otherUser.name}
           </p>
           <span className="text-gray-500 text-sm">{statusText}</span>

@@ -124,8 +124,8 @@ const ConversationList = ({ initialItems, users }: ConversationListProps) => {
   return (
     <div
       className={`flex flex-col border-r shadow items-center ${
-        isConversation ? "hidden" : "w-full"
-      } md:w-[400px] h-screen pt-10 md:pt-0`}>
+        isConversation ? "hidden xl:flex" : "w-full"
+      } xl:w-[400px] h-screen pt-10 md:pt-0`}>
       <div className="flex items-center space-x-2 mb-4 w-full justify-between p-4">
         <h2 className="text-lg font-semibold text-gray-800">Conversations</h2>
         <FaComment className="w-6 h-6 text-gray-800" />

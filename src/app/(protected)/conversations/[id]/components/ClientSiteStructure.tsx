@@ -33,7 +33,7 @@ const ClientSiteStructure = ({
   const me = useMe(conversation);
 
   return (
-    <div className="flex justify-center w-full h-full">
+    <div className="flex justify-center w-screen md:w-full h-full">
       <div className="flex h-screen w-full flex-col justify-between items-start">
         <Header
           isOpen={isOpen}
