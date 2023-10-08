@@ -39,7 +39,7 @@ const Input: React.FC<InputProps> = ({
             error && "focus:!ring-rose-500",
             disabled && "opacity:"
           )}
-          {...register(id)}
+          {...register(id!)}
           {...rest}
         />
       </div>
