@@ -6,14 +6,14 @@ interface ButtonProps extends React.ComponentProps<"button"> {
   label: string;
   onClick?: () => void;
   disabled?: boolean;
-  type?: "primary" | "secondary" | "warning" | "success";
+  variant?: "primary" | "secondary" | "warning" | "success";
 }
 
 const Button: React.FC<ButtonProps> = ({
   label,
   disabled,
-  type = "primary",
   className,
+  variant = "primary",
   ...rest
 }) => {
   const buttonClasses = clsx(
@@ -46,7 +46,7 @@ const Button: React.FC<ButtonProps> = ({
 
   let buttonVariantClasses = "";
 
-  switch (type) {
+  switch (variant) {
     case "primary":
       buttonVariantClasses = primaryClasses;
       break;
