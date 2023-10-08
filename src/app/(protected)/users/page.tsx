@@ -6,7 +6,7 @@ const page = async () => {
   const users = await getUsers();
 
   return (
-    <div className="h-full w-full border-2 border-black mt-[70px]">
+    <div className="h-full w-full mt-[70px] md:mt-0">
       <UserList users={users} />
     </div>
   );

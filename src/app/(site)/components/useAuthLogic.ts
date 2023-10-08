@@ -44,42 +44,44 @@ const useAuthLogic = () => {
     }
   }, [variant]);
 
-  const submitAuthForm: SubmitHandler<FieldValues> = async (
-    data: FieldValues
-  ) => {
+  const submitAuthForm: SubmitHandler<FieldValues> = (data: FieldValues) => {
     if (variant === "LOGIN") {
+      setManualLoading(true);
       signIn("credentials", {
         ...data,
         redirect: false,
-      }).then((callback: any) => {
-        if (callback?.error) {
-          toast.error("Invalid credentials");
-        }
+      })
+        .then((callback: any) => {
+          if (callback?.error) {
+            toast.error("Invalid credentials");
+          }
 
-        if (callback?.ok && !callback?.error) {
-          toast.success("Logged in");
-        }
-      });
+          if (callback?.ok && !callback?.error) {
+            toast.success("Logged in");
+          }
+        })
+        .catch((e) => console.log(e))
+        .finally(() => setManualLoading(false));
     } else {
       registerFn(data as Register);
     }
   };
 
-  const socialActions = (action: "github" | "google" | "facebook") => {
-    setManualLoading(true);
-    signIn(action, { redirect: false })
-      .then((callback) => {
-        if (callback?.error) {
-          toast.error("Invalid credentials");
-        }
-
-        if (callback?.ok && !callback?.error) {
-          toast.success("Logged in");
-        }
-      })
-      .finally(() => {
-        setManualLoading(false);
-      });
+  const socialActions = async (action: "github" | "google" | "facebook") => {
+    try {
+      setManualLoading(true);
+      const callback = await signIn(action, { redirect: false });
+      if (callback?.error) {
+        toast.error("Invalid credentials");
+      }
+      if (callback?.ok && !callback?.error) {
+        toast.success("Logged in");
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setManualLoading(false);
+    }
   };
 
   return {

@@ -12,6 +12,8 @@ import UserProfile from "../UserProfile";
 import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSession } from "next-auth/react";
+import Loader from "../Loader";
 
 const Sidebar = ({
   currentUser,
@@ -20,7 +22,8 @@ const Sidebar = ({
   currentUser: User;
   users: User[];
 }) => {
-  const routes = useRoutes();
+  const session = useSession();
+  const { routes, manualLoading } = useRoutes();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const isMediumResolution = useMediaQuery({
     query: "(min-width: 768px)",
@@ -37,17 +40,14 @@ const Sidebar = ({
   }, [isMediumResolution]);
 
   return (
-    <AnimatePresence>
+    <AnimatePresence initial={false}>
       <motion.nav
-        initial={{ height: 0, width: 0 }}
+        initial={{ width: 0 }}
         animate={{
-          height: isSidebarOpen ? "100%" : 0,
           width: isSidebarOpen ? "200px" : 0,
         }}
         transition={{ duration: 0.3 }}
-        className={`flex flex-col z-50 shadow-xl  w-[100px] h-screen bg-gray-800 justify-between ${clsx(
-          !isMediumResolution && "fixed h-screen"
-        )}`}>
+        className={`fixed flex flex-col z-50 shadow-xl w-[200px] h-screen bg-gray-800 justify-between `}>
         <aside className={`flex flex-col h-screen bg-gray-800 text-white`}>
           <button
             className="p-4 text-white fixed top-0 left-0 bg-gray-800 md:hidden"
@@ -75,7 +75,7 @@ const Sidebar = ({
                       label={route.label}
                       active={route.active}
                       onClick={route.onClick}
-                      key={route.label + index}
+                      key={route.label + index + route.href}
                     />
                   ))}
                 </ul>
@@ -93,6 +93,7 @@ const Sidebar = ({
           </motion.div>
         )}
       </motion.nav>
+      <Loader loading={session.status === "loading" || manualLoading} />
     </AnimatePresence>
   );
 };

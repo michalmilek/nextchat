@@ -18,11 +18,13 @@ import { signIn, useSession } from "next-auth/react";
 import { toast } from "react-toastify";
 import { Register } from "@/services/auth/auth";
 import { useRouter } from "next/navigation";
+import Loader from "@/components/Loader";
 
 const AuthForm = () => {
-  const session = useSession();
+  const { data: session, status } = useSession();
   const { isLoading } = useRegister();
-  const { toggleVariant, variant, schema, submitAuthForm } = useAuthLogic();
+  const { toggleVariant, variant, schema, submitAuthForm, manualLoading } =
+    useAuthLogic();
   const router = useRouter();
 
   const {
@@ -41,68 +43,70 @@ const AuthForm = () => {
   });
 
   useEffect(() => {
-    if (session?.status === "authenticated") {
+    if (status === "authenticated") {
       router.push("/conversations");
     }
-  }, [session?.status, router]);
+  }, [status, router]);
 
   return (
-    <div className="mt-8 sm:mx-auto sm_w-full sm:max-w-md">
-      <div className="bg-white px-4 py-u shadow sm:rounded-lg sm:px-10">
-        <form
-          className="space-y-6 py-3"
-          onSubmit={handleSubmit(submitAuthForm)}>
-          {variant === "REGISTER" && (
+    <>
+      <div className="mt-8 sm:mx-auto sm_w-full sm:max-w-md px-2">
+        <div className="bg-gray-400 px-4 py-u sm:rounded-lg sm:px-10 rounded-md shadow-xl">
+          <form
+            className="space-y-6 py-3"
+            onSubmit={handleSubmit(submitAuthForm)}>
+            {variant === "REGISTER" && (
+              <Input
+                id="name"
+                label="Name"
+                register={register}
+                error={
+                  errors.name?.message ? (errors.name.message as string) : ""
+                }
+              />
+            )}
             <Input
-              id="name"
-              label="Name"
+              id="email"
+              label="Email"
               register={register}
               error={
-                errors.name?.message ? (errors.name.message as string) : ""
+                errors.email?.message ? (errors.email.message as string) : ""
               }
             />
-          )}
-          <Input
-            id="email"
-            label="Email"
-            register={register}
-            error={
-              errors.email?.message ? (errors.email.message as string) : ""
-            }
-          />
-          <Input
-            id="password"
-            label="Password"
-            type={"password"}
-            register={register}
-            error={
-              errors.password?.message
-                ? (errors.password.message as string)
-                : ""
-            }
-          />
-          <Button
-            disabled={isLoading}
-            label={variant === "REGISTER" ? "Sign up" : "Sign in"}
-            className="w-full flex justify-center"
-          />
-          <Divider
-            text="Or continue with"
-            className="mt-10"
-          />
-        </form>
-        <div className="mt-6 pb-6">
-          <AuthSocialButtons />
-        </div>
+            <Input
+              id="password"
+              label="Password"
+              type={"password"}
+              register={register}
+              error={
+                errors.password?.message
+                  ? (errors.password.message as string)
+                  : ""
+              }
+            />
+            <Button
+              label={variant === "REGISTER" ? "Sign up" : "Sign in"}
+              className="w-full flex justify-center"
+            />
+            <Divider
+              text="Or continue with"
+              className="mt-10"
+            />
+          </form>
+          <div className="mt-6 pb-6">
+            <AuthSocialButtons />
+          </div>
 
-        <div className="pb-6">
-          <AuthToggle
-            variant={variant}
-            toggleVariant={toggleVariant}
-          />
+          <div className="pb-6">
+            <AuthToggle
+              variant={variant}
+              toggleVariant={toggleVariant}
+            />
+          </div>
         </div>
       </div>
-    </div>
+      <Loader loading={status === "loading" || manualLoading || isLoading} />
+    </>
   );
 };
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { Variant } from "./AuthForm";
+import { Variant } from "./useAuthLogic";
 
 interface AuthToggleProps {
   variant: Variant;

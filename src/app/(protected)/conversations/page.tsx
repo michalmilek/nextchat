@@ -8,13 +8,9 @@ import { useMediaQuery } from "react-responsive";
 import clsx from "clsx";
 
 const Page = () => {
-  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
-
   return (
     <main
-      className={`h-full w-full flex justify-center items-center ${clsx(
-        isMobile && "hidden"
-      )}`}>
+      className={`h-full w-full md:flex justify-center items-center hidden`}>
       <span className="text-xl font-bold">Select a user to talk</span>
     </main>
   );

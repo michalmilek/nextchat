@@ -9,7 +9,7 @@ const UserList = ({ users }: { users: User[] }) => {
   return (
     <div className="w-full h-full flex flex-col justify-center items-center px-10 py-10 overflow-y-auto">
       <h1 className="text-3xl font-bold mb-8">List of users</h1>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 w-full mt-10">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 ld:grid-cols-3 xl:grid-cols-4 w-full mt-10">
         {users.map((user) => (
           <Link
             href={`/users/${user.id}`}

@@ -97,11 +97,11 @@ const ConversationItem = ({
             </span>
           </div>
         </div>
-        {lastMessage?.createdAt && (
-          <p className="text-[9px] text-gray-500 justify-self-end">
-            {format(new Date(lastMessage.createdAt), "p")}
-          </p>
-        )}
+
+        <p className="text-[9px] text-gray-500 justify-self-end w-10 h-full">
+          {lastMessage?.createdAt &&
+            format(new Date(lastMessage.createdAt), "p")}
+        </p>
       </div>
     </button>
   );

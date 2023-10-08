@@ -58,15 +58,15 @@ const UserProfile = ({ currentUser }: { currentUser: User }) => {
   return (
     <>
       <button
-        className="p-4 shadow-md items-center flex flex-col text-gray-200 hover:bg-gray-700"
+        className="p-4 shadow-md items-center flex flex-col text-gray-200 hover:bg-gray-700 w-full"
         onClick={toggleModal}>
         <Avatar
           email={currentUser.email!}
           image={currentUser.image}
           alt={currentUser.name || currentUser.id}
         />
-        <h2 className="text-xl font-bold text-center">{currentUser.name}</h2>
-        <p className="text-gray-300 text-center">{currentUser.email}</p>
+        <h2 className="text-lg font-bold text-center">{currentUser.name}</h2>
+        <p className="text-gray-300 text-xs text-center">{currentUser.email}</p>
       </button>
       <Dialog
         open={isModalOpen}

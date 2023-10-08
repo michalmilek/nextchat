@@ -24,7 +24,7 @@ const UserList = ({ users }: { users: User[] }) => {
         )}`}>
         {users.map((user) => (
           <li
-            key={user.id}
+            key={user.id + user.email!}
             className="flex gap-4 items-center py-2 px-4 hover:bg-gray-700 transition-all rounded-md w-full">
             <button
               className="flex gap-2 items-center flex-wrap w-full h-full"
