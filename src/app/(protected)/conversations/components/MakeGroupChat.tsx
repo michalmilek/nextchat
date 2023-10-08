@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import Select, { ValueType } from "react-select";
+import Select from "react-select";
 import { Dialog, DialogProps } from "@headlessui/react";
 import { FaUsers } from "react-icons/fa";
 import { User } from "@prisma/client";
