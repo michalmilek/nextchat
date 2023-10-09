@@ -16,6 +16,8 @@ export const usePostConversation = () => {
     onSuccess: (response: FullConversationType) => {
       router.push(`/conversations/${response.id}`);
       toast.success(`Conversation created successfully.`);
+    },
+    onError: () => {
       toast.error("ERROR");
     },
   });
